@@ -1715,6 +1715,11 @@ big.js@^3.1.3:
   resolved "https://neo.jfrog.io/neo/api/npm/npm/big.js/-/big.js-3.2.0.tgz#a5fc298b81b9e0dca2e458824784b65c52ba588e"
   integrity sha1-pfwpi4G54Nyi5FiCR4S2XFK6WI4=
 
+bignumber.js@^8.0.1:
+  version "8.0.1"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/bignumber.js/-/bignumber.js-8.0.1.tgz#5d419191370fb558c64e3e5f70d68e5947138832"
+  integrity sha1-XUGRkTcPtVjGTj5fcNaOWUcTiDI=
+
 binary-extensions@^1.0.0:
   version "1.12.0"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/binary-extensions/-/binary-extensions-1.12.0.tgz#c2d780f53d45bba8317a8902d4ceeaf3a6385b14"
@@ -6664,12 +6669,11 @@ neo-async@^2.5.0:
   resolved "https://neo.jfrog.io/neo/api/npm/npm/neo-async/-/neo-async-2.6.0.tgz#b9d15e4d71c6762908654b5183ed38b753340835"
   integrity sha1-udFeTXHGdikIZUtRg+04t1M0CDU=
 
-neo4j-driver@^1.7.2:
-  version "1.7.2"
-  resolved "https://neo.jfrog.io/neo/api/npm/npm/neo4j-driver/-/neo4j-driver-1.7.2.tgz#c72a6dfa6bd2106b00a42794dc52a82b227b48e0"
-  integrity sha1-xypt+mvSEGsApCeU3FKoKyJ7SOA=
+"neo4j-driver@file:../neo4j-javascript-driver":
+  version "1.7.0-dev"
   dependencies:
     babel-runtime "^6.26.0"
+    bignumber.js "^8.0.1"
     text-encoding "^0.6.4"
     uri-js "^4.2.1"
 

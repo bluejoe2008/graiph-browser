@@ -45,16 +45,55 @@ const mapItemProperties = itemProperties =>
       ({ key: keyA }, { key: keyB }) =>
         keyA < keyB ? -1 : keyA === keyB ? 0 : 1
     )
-    .map((prop, i) => (
-      <StyledInspectorFooterRowListPair className='pair' key={'prop' + i}>
-        <StyledInspectorFooterRowListKey className='key'>
-          {prop.key + ': '}
-        </StyledInspectorFooterRowListKey>
-        <StyledInspectorFooterRowListValue className='value'>
-          {optionalToString(prop.value)}
-        </StyledInspectorFooterRowListValue>
-      </StyledInspectorFooterRowListPair>
-    ))
+    .map((prop, i) => {
+      // is a blob?
+      console.log(prop.value)
+      if (prop.value['@type'] == 'blob') {
+        const title =
+          'id: ' +
+          prop.value.id +
+          '\r\nlength: ' +
+          prop.value.length +
+          '\r\nmime-type: ' +
+          prop.value.mimetype
+        if (undefined === prop.value.url) {
+          return (
+            <StyledInspectorFooterRowListPair className='pair' key={'prop' + i}>
+              <StyledInspectorFooterRowListKey className='key'>
+                {prop.key + ': '}
+              </StyledInspectorFooterRowListKey>
+              <StyledInspectorFooterRowListValue className='value'>
+                <i className='fa fa-file-photo-o' title={title} />
+              </StyledInspectorFooterRowListValue>
+            </StyledInspectorFooterRowListPair>
+          )
+        } else {
+          return (
+            <StyledInspectorFooterRowListPair className='pair' key={'prop' + i}>
+              <StyledInspectorFooterRowListKey className='key'>
+                {prop.key + ': '}
+              </StyledInspectorFooterRowListKey>
+              <StyledInspectorFooterRowListValue className='value'>
+                <a href={prop.value.url} target='_blank'>
+                  <i className='fa fa-file-photo-o' title={title} />
+                </a>
+              </StyledInspectorFooterRowListValue>
+            </StyledInspectorFooterRowListPair>
+          )
+        }
+      } else {
+        return (
+          <StyledInspectorFooterRowListPair className='pair' key={'prop' + i}>
+            <StyledInspectorFooterRowListKey className='key'>
+              {prop.key + ': '}
+            </StyledInspectorFooterRowListKey>
+            <StyledInspectorFooterRowListValue className='value'>
+              {optionalToString(prop.value)}
+            </StyledInspectorFooterRowListValue>
+          </StyledInspectorFooterRowListPair>
+        )
+      }
+    })
 
 const mapLabels = (graphStyle, itemLabels) => {
   return itemLabels.map((label, i) => {

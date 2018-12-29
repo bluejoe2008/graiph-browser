@@ -116,6 +116,7 @@
   "dependencies": {
     "@babel/polyfill": "^7.0.0",
     "ascii-data-table": "^2.1.1",
+    "bignumber.js": "^8.0.1",
     "classnames": "^2.2.5",
     "codemirror": "^5.29.0",
     "cypher-codemirror": "1.1.4",
@@ -126,7 +127,7 @@
     "firebase": "^4.3.0",
     "isomorphic-fetch": "^2.2.1",
     "jsonic": "^0.3.0",
-    "neo4j-driver": "^1.7.2",
+    "neo4j-driver": "file:../neo4j-javascript-driver",
     "react": "^16.4.1",
     "react-addons-pure-render-mixin": "^15.0.2",
     "react-dnd": "^2.5.1",

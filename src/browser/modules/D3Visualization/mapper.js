@@ -23,7 +23,14 @@ import Graph from './lib/visualization/components/graph'
 import Node from './lib/visualization/components/node'
 import Relationship from './lib/visualization/components/relationship'
 
-const mapProperties = _ => Object.assign({}, ...stringifyValues(_))
+const mapProperties = _ => Object.assign({}, ...stringifyValues2(_))
+
+// added blob support
+const stringifyValues2 = obj =>
+  Object.keys(obj).map(k => ({
+    [k]: obj[k]['@type'] == 'blob' ? obj[k] : optionalToString(obj[k])
+  }))
+
 const stringifyValues = obj =>
   Object.keys(obj).map(k => ({ [k]: optionalToString(obj[k]) }))
 
