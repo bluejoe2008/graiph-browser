@@ -19,11 +19,7 @@
  */
 
 import React, { Component } from 'react'
-import {
-  deepEquals,
-  toHumanReadableBytes,
-  optionalToString2
-} from 'services/utils'
+import { deepEquals, toHumanReadableBytes } from 'services/utils'
 import SVGInline from 'react-svg-inline'
 import {
   inspectorFooterContractedHeight,
@@ -43,6 +39,34 @@ import {
 import { GrassEditor } from './GrassEditor'
 import { RowExpandToggleComponent } from './RowExpandToggle'
 
+const optionalToString2 = v => {
+  if ([null, undefined].includes(v) || typeof v.toString !== 'function') { return v }
+
+  if (Array.isArray(v)) return '(array)'
+
+  var s = v.toString()
+  if (s === '[object Object]') return '(object)'
+
+  return s
+}
+
+const iconOf = mime => {
+  var major = mime.split('/')[0]
+  var map = {
+    image: 'fa fa-file-image-o',
+    text: 'fa fa-file-text-o',
+    movie: 'fa fa-file-movie-o',
+    audio: 'fa fa-file-audio-o',
+    music: 'fa fa-file-sound-o',
+    video: 'fa fa-file-movie-o',
+    multipart: 'fa fa-file-zip-o'
+  }
+  var icon = map[major]
+  if (icon === undefined) icon = 'fa fa-file-o'
+
+  return icon
+}
+
 const mapItemProperties = itemProperties =>
   itemProperties
     .sort(({ key: keyA }, { key: keyB }) =>
@@ -59,6 +83,8 @@ const mapItemProperties = itemProperties =>
           '\r\nmime-type: ' +
           prop.value.mimeType
 
+        var icon = iconOf(prop.value.mimeType)
+
         if (prop.value['@blob-type'] == 'remote') {
           var url = './blob/' + prop.value.handle
 
@@ -69,24 +95,20 @@ const mapItemProperties = itemProperties =>
               </StyledInspectorFooterRowListKey>
               <StyledInspectorFooterRowListValue className='value'>
                 <a href={url} target='_blank'>
-                  <i className='fa fa-file-photo-o' title={title} />
+                  <i className={icon} title={title} />
                 </a>
               </StyledInspectorFooterRowListValue>
             </StyledInspectorFooterRowListPair>
           )
         } else {
-          var buffer = new Uint8Array(prop.value.data)
-          var blob = new Blob([buffer], { type: prop.value.mimeType })
-          var url = URL.createObjectURL(blob)
-
           return (
             <StyledInspectorFooterRowListPair className='pair' key={'prop' + i}>
               <StyledInspectorFooterRowListKey className='key'>
                 {prop.key + ': '}
               </StyledInspectorFooterRowListKey>
               <StyledInspectorFooterRowListValue className='value'>
-                <a href={url} target='_blank'>
-                  <i className='fa fa-file-photo-o' title={title} />
+                <a href={prop.value.url} target='_blank'>
+                  <i className={icon} title={title} />
                 </a>
               </StyledInspectorFooterRowListValue>
             </StyledInspectorFooterRowListPair>

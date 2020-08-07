@@ -556,13 +556,6 @@ export const recursivelyTypeGraphItems = (item, types = neo4j.types) => {
     // blob
     // TODO: InlineBlob.data is erased by some unknown methods, so create a new byte array for it, which causes memory copy time cost
     if (item['@blob-type'] === 'inline') {
-      var buffer = item.data
-      var bytes = []
-      for (var i = 0; i < buffer.length; i++) {
-        bytes[i] = buffer.getUInt8(i)
-      }
-
-      item.data = bytes
       return item
     }
 
