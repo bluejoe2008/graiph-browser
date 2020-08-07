@@ -4,6 +4,7 @@
 
 1.  Clone this repo
 1.  Install yarn globally (not required but recommended): `npm install -g yarn`
+1.  update neo4j-javascript-driver if required: `yarn upgrade neo4j-driver`
 1.  Install project dependencies: `yarn`
 
 ### Development server

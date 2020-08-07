@@ -19,7 +19,11 @@
  */
 
 import React, { Component } from 'react'
-import { deepEquals, optionalToString } from 'services/utils'
+import {
+  deepEquals,
+  toHumanReadableBytes,
+  optionalToString2
+} from 'services/utils'
 import SVGInline from 'react-svg-inline'
 import {
   inspectorFooterContractedHeight,
@@ -41,40 +45,47 @@ import { RowExpandToggleComponent } from './RowExpandToggle'
 
 const mapItemProperties = itemProperties =>
   itemProperties
-    .sort(
-      ({ key: keyA }, { key: keyB }) =>
-        keyA < keyB ? -1 : keyA === keyB ? 0 : 1
+    .sort(({ key: keyA }, { key: keyB }) =>
+      keyA < keyB ? -1 : keyA === keyB ? 0 : 1
     )
     .map((prop, i) => {
       // is a blob?
-      console.log(prop.value)
-      if (prop.value['@type'] == 'blob') {
-        const title =
+      if (prop.value['@blob-type'] !== undefined) {
+        var title =
           'id: ' +
           prop.value.id +
           '\r\nlength: ' +
-          prop.value.length +
+          toHumanReadableBytes(prop.value.length) +
           '\r\nmime-type: ' +
-          prop.value.mimetype
-        if (undefined === prop.value.url) {
+          prop.value.mimeType
+
+        if (prop.value['@blob-type'] == 'remote') {
+          var url = './blob/' + prop.value.handle
+
           return (
             <StyledInspectorFooterRowListPair className='pair' key={'prop' + i}>
               <StyledInspectorFooterRowListKey className='key'>
                 {prop.key + ': '}
               </StyledInspectorFooterRowListKey>
               <StyledInspectorFooterRowListValue className='value'>
-                <i className='fa fa-file-photo-o' title={title} />
+                <a href={url} target='_blank'>
+                  <i className='fa fa-file-photo-o' title={title} />
+                </a>
               </StyledInspectorFooterRowListValue>
             </StyledInspectorFooterRowListPair>
           )
         } else {
+          var buffer = new Uint8Array(prop.value.data)
+          var blob = new Blob([buffer], { type: prop.value.mimeType })
+          var url = URL.createObjectURL(blob)
+
           return (
             <StyledInspectorFooterRowListPair className='pair' key={'prop' + i}>
               <StyledInspectorFooterRowListKey className='key'>
                 {prop.key + ': '}
               </StyledInspectorFooterRowListKey>
               <StyledInspectorFooterRowListValue className='value'>
-                <a href={prop.value.url} target='_blank'>
+                <a href={url} target='_blank'>
                   <i className='fa fa-file-photo-o' title={title} />
                 </a>
               </StyledInspectorFooterRowListValue>
@@ -88,7 +99,7 @@ const mapItemProperties = itemProperties =>
               {prop.key + ': '}
             </StyledInspectorFooterRowListKey>
             <StyledInspectorFooterRowListValue className='value'>
-              {optionalToString(prop.value)}
+              {optionalToString2(prop.value)}
             </StyledInspectorFooterRowListValue>
           </StyledInspectorFooterRowListPair>
         )
@@ -180,9 +191,7 @@ export class InspectorComponent extends Component {
           </StyledInlineList>
         )
       } else if (type === 'canvas') {
-        const description = `Displaying ${item.nodeCount} nodes, ${
-          item.relationshipCount
-        } relationships.`
+        const description = `Displaying ${item.nodeCount} nodes, ${item.relationshipCount} relationships.`
         inspectorContent = (
           <StyledInlineList className='list-inline'>
             <StyledInspectorFooterRowListPair className='pair' key='pair'>

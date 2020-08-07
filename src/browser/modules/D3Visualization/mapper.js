@@ -28,11 +28,13 @@ const mapProperties = _ => Object.assign({}, ...stringifyValues2(_))
 // added blob support
 const stringifyValues2 = obj =>
   Object.keys(obj).map(k => ({
-    [k]: obj[k]['@type'] == 'blob' ? obj[k] : optionalToString(obj[k])
+    [k]: obj[k]['@blob-type'] !== undefined ? obj[k] : optionalToString(obj[k])
   }))
 
+/*
 const stringifyValues = obj =>
   Object.keys(obj).map(k => ({ [k]: optionalToString(obj[k]) }))
+*/
 
 export function createGraph (nodes, relationships) {
   let graph = new Graph()

@@ -471,11 +471,19 @@ export const hasReservedProp = (obj, propName) =>
 export const put = dispatch => action => dispatch(action)
 
 export const optionalToString = v => {
-  console.log(v)
   return ![null, undefined].includes(v) && typeof v.toString === 'function'
     ? v.toString()
     : v
 }
+
+export const optionalToString2 = v => {
+  return ![null, undefined].includes(v) && typeof v.toString === 'function'
+    ? typeof v === 'object'
+      ? '(object)'
+      : v.toString()
+    : v
+}
+
 export const toKeyString = str => btoa(encodeURIComponent(str))
 
 export const generateBoltHost = host => {

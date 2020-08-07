@@ -71,6 +71,7 @@ export function objIntToString (obj, converters) {
       newObj[key] = itemIntToString(entry[key], converters)
     })
   }
+
   return newObj
 }
 
@@ -223,7 +224,9 @@ export function extractNodesAndRelationshipsFromRecordsForOldVis (
     return {
       id: item.identity.toString(),
       labels: item.labels,
-      properties: itemIntToString(item.properties, converters)
+      // properties: itemIntToString(item.properties, converters)
+      // pandadb: keep blob as object {}
+      properties: item.properties
     }
   })
   let relationships = rawRels
@@ -240,7 +243,9 @@ export function extractNodesAndRelationshipsFromRecordsForOldVis (
       startNodeId: item.start.toString(),
       endNodeId: item.end.toString(),
       type: item.type,
-      properties: itemIntToString(item.properties, converters)
+      // properties: itemIntToString(item.properties, converters)
+      // pandadb: keep blob as object {}
+      properties: item.properties
     }
   })
   return { nodes: nodes, relationships: relationships }
@@ -548,6 +553,23 @@ export const recursivelyTypeGraphItems = (item, types = neo4j.types) => {
     return tmp
   }
   if (typeof item === 'object') {
+    // blob
+    // TODO: InlineBlob.data is erased by some unknown methods, so create a new byte array for it, which causes memory copy time cost
+    if (item['@blob-type'] === 'inline') {
+      var buffer = item.data
+      var bytes = []
+      for (var i = 0; i < buffer.length; i++) {
+        bytes[i] = buffer.getUInt8(i)
+      }
+
+      item.data = bytes
+      return item
+    }
+
+    if (item['@blob-type'] === 'remote') {
+      return item
+    }
+
     let typedObject = {}
     item = escapeReservedProps(item, reservedTypePropertyName)
     Object.keys(item).forEach(key => {
